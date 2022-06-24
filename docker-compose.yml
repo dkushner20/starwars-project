@@ -1,0 +1,42 @@
+version: "3.8"
+services:
+  # Postgres container
+  swapiDB:
+    image: postgres:13.2
+    ports:
+      - "5432:5432"
+    env_file:
+      - ./docker/starwarsDB/.env
+    volumes:
+      - app-data:/usr/local/postgres
+      - './resources:/resources:rw'
+      - './docker/starwarsDB:/docker-entrypoint-initdb.d:rw'
+    networks:
+      - starwars-project
+  tmdb:
+    build:
+      context: ./
+      dockerfile: docker/tmdb/Dockerfile
+    image: postgres
+    ports:
+      - "5433:5432"
+    env_file:
+      - ./docker/tmdb/.env
+    volumes:
+      - app-data:/usr/local/postgres
+      - './resources:/resources:rw'
+      - './docker/tmdb:/docker-entrypoint-initdb.d:rw'
+    networks:
+      - starwars-project
+
+networks:
+  starwars-project:
+    name: starwars-project
+volumes:
+  app-data:
+    driver: local
+    driver_opts:
+      device: "${PWD}"
+      type: none
+      o: bind
+

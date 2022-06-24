@@ -1,0 +1,4 @@
+.idea
+swapi-api/.gradle
+swapi-api/build
+lib
